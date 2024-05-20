@@ -1,0 +1,26 @@
+<resources>
+    <string name="settings">Einstellungen</string>
+    <string name="button">Taste auswählen</string>
+    <string name="button_summary">Wähle eine Taste, um die Toastmeldung mit der Temperatur anzuzeigen.</string>
+    <string name="enable_usb_debugging_first">Aktiviere zuerst USB-Debugging in den Entwickleroptionen</string>
+    <string name="temperature">CPU Temperatur: %1$s °C</string>
+
+    <string-array name="key_code_labels">
+        <item>Lesezeichen-Taste</item>
+        <item>TV-Guide-Taste</item>
+        <item>Rote Taste</item>
+        <item>Grüne Taste</item>
+        <item>Gelbe Taste</item>
+        <item>Blaue Taste</item>
+        <item>Taste 0</item>
+        <item>Taste 1</item>
+        <item>Taste 2</item>
+        <item>Taste 3</item>
+        <item>Taste 4</item>
+        <item>Taste 5</item>
+        <item>Taste 6</item>
+        <item>Taste 7</item>
+        <item>Taste 8</item>
+        <item>Taste 9</item>
+    </string-array>
+</resources>

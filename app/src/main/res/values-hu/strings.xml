@@ -1,0 +1,26 @@
+<resources>
+    <string name="settings">Beállítások</string>
+    <string name="button">Gomb kiválasztása</string>
+    <string name="button_summary">Gomb kiválasztása a hőmérséklet kijelzéséhez.</string>
+    <string name="enable_usb_debugging_first">Először engedélyezze az USB hibakeresést a fejlesztői beállításoknál</string>
+    <string name="temperature">CPU Hőmérséklet: %1$s °C</string>
+
+    <string-array name="key_code_labels">
+        <item>Bookmark Gomb</item>
+        <item>TV-Guide Gomb</item>
+        <item>Vörös Gomb</item>
+        <item>Zöld Gomb</item>
+        <item>Sárga Gomb</item>
+        <item>Kék Gomb</item>
+        <item>0-ás szám gomb</item>
+        <item>1-es szám gomb</item>
+        <item>2-es szám gomb</item>
+        <item>3-as szám gomb</item>
+        <item>4-es szám gomb</item>
+        <item>5-ös szám gomb</item>
+        <item>6-os szám gomb</item>
+        <item>7-es szám gomb</item>
+        <item>8-as szám gomb</item>
+        <item>9-es szám gomb</item>
+    </string-array>
+</resources>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/settings">
+
+        <ListPreference
+            android:defaultValue="0"
+            android:entries="@array/key_code_labels"
+            android:entryValues="@array/key_codes"
+            android:icon="@drawable/ic_remote_24dp"
+            android:key="selected_code_key"
+            android:summary="@string/button_summary"
+            android:title="@string/button" />
+    </PreferenceCategory>
+
+    <PreferenceCategory>
+        <Preference
+            android:key="pref_version_key"
+            android:summary="Link"
+            android:title="Version"
+            android:icon="@drawable/ic_info_24dp" />
+    </PreferenceCategory>
+</PreferenceScreen>
