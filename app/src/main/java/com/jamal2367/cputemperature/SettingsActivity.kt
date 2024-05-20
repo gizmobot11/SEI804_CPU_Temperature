@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
             val versionName = packageInfo.versionName
 
             preferenceAppVersion?.title = getString(R.string.app_name) + " $versionName"
-            preferenceAppVersion?.summary = "https://github.com/jamal2362/SEI804_CPU Temperature"
+            preferenceAppVersion?.summary = "https://github.com/jamal2362/SEI804_CPU_Temperature"
             preferenceAppVersion?.setIcon(R.drawable.ic_info_24dp)
             preferenceAppVersion?.setOnPreferenceClickListener {
                 Toast.makeText(requireContext(), "❤", Toast.LENGTH_LONG).show()
