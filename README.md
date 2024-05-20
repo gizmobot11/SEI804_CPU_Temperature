@@ -1,2 +1,2 @@
-# SEI804_CPU Temperature
-Video Info Overlay Application for SEI804 Devices
+# SEI804_CPU_Temperature
+CPU Temperature Application for SEI804 Devices
