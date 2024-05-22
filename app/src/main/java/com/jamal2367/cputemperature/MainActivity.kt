@@ -6,16 +6,18 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Base64
 import android.util.Log
 import android.view.KeyEvent
 import android.view.accessibility.AccessibilityEvent
 import android.widget.Toast
-import android.util.Base64
+import androidx.preference.PreferenceManager
+import com.jamal2367.cputemperature.MainActivity.ThreadUtil.runOnUiThread
 import com.tananaev.adblib.AdbBase64
 import com.tananaev.adblib.AdbConnection
 import com.tananaev.adblib.AdbCrypto
 import com.tananaev.adblib.AdbStream
-import androidx.preference.PreferenceManager
+import java.io.File
 import java.lang.ref.WeakReference
 import java.net.Socket
 
@@ -29,6 +31,9 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
     private var myAsyncTask: MyAsyncTask? = null
     private val ipAddress = "0.0.0.0"
     private val selectedCodeKey = "selected_code_key"
+    private var switchKey= "switch_key"
+    private val publicKeyName: String = "public.key"
+    private val privateKeyName: String = "private.key"
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
     }
@@ -55,8 +60,8 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
         Log.d("TAG", "onServiceConnected")
 
         if (!isUsbDebuggingEnabled()) {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(this@MainActivity, getString(R.string.enable_usb_debugging_first), Toast.LENGTH_LONG).show()
+            runOnUiThread {
+                Toast.makeText(this, getString(R.string.enable_usb_debugging_first), Toast.LENGTH_LONG).show()
             }
             openDeveloperSettings()
         }
@@ -114,22 +119,47 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
 
     fun adbCommander(ip: String?) {
         val socket = Socket(ip, 5555)
-        val generateAdbKeyPair = AdbCrypto.generateAdbKeyPair(AndroidBase64())
+        val crypto = readCryptoConfig(filesDir) ?: writeNewCryptoConfig(filesDir)
+
+        if (crypto == null) {
+            runOnUiThread {
+                Toast.makeText(this, "Failed to generate/load RSA key pair", Toast.LENGTH_LONG).show()
+            }
+            return
+        }
 
         try {
+            val isSwitch = sharedPreferences.getBoolean(switchKey, false)
+
             if (stream == null || connection == null) {
-                connection = AdbConnection.create(socket, generateAdbKeyPair)
+                connection = AdbConnection.create(socket, crypto)
                 connection?.connect()
             }
 
-            val androidVersionStream = connection?.open("shell:dumpsys thermalservice | awk -F= '/mValue/{printf \"%.1f\\n\", \$2}' | sed -n '2p'")
-            val androidVersionOutputBytes = androidVersionStream?.read()
-            var androidVersionMessage: String = androidVersionOutputBytes?.decodeToString() ?: "No output available"
+            if (!isSwitch) {
+                val thermalServiceStream = connection?.open("shell:dumpsys thermalservice | awk -F= '/mValue/{printf \"%.1f\\n\", \$2}' | sed -n '2p'")
+                val thermalServiceOutputBytes = thermalServiceStream?.read()
+                var thermalServiceMessage: String = thermalServiceOutputBytes?.decodeToString() ?: "No output available"
 
-            androidVersionMessage = androidVersionMessage.replace("\n", "")
+                thermalServiceMessage = thermalServiceMessage.replace("\n", "")
 
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(this@MainActivity, getString(R.string.temperature, androidVersionMessage), Toast.LENGTH_LONG).show()
+                runOnUiThread {
+                    Toast.makeText(this, getString(R.string.cpu_temperature, thermalServiceMessage), Toast.LENGTH_LONG).show()
+                }
+            } else {
+                val hardwarePropertiesStream = connection?.open("shell:dumpsys hardware_properties | grep \"CPU temperatures\" | cut -d \"[\" -f2 | cut -d \"]\" -f1")
+                val hardwarePropertiesOutputBytes = hardwarePropertiesStream?.read()
+                var hardwarePropertiesMessage: String = hardwarePropertiesOutputBytes?.decodeToString() ?: "No output available"
+
+                val formattedTemperatures = hardwarePropertiesMessage.split(". ")
+                    .mapNotNull { it.toDoubleOrNull() }
+                    .joinToString(", ") { "%.1f".format(it).replace(",", ".") }
+
+                hardwarePropertiesMessage = formattedTemperatures.replace("\n", "")
+
+                runOnUiThread {
+                    Toast.makeText(this, getString(R.string.cpu_temperature, hardwarePropertiesMessage), Toast.LENGTH_LONG).show()
+                }
             }
         } catch (e: InterruptedException) {
             e.printStackTrace()
@@ -145,6 +175,38 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
 
     private fun isUsbDebuggingEnabled(): Boolean {
         return Settings.Global.getInt(contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
+    }
+
+    private fun readCryptoConfig(dataDir: File?): AdbCrypto? {
+        val pubKey = File(dataDir, publicKeyName)
+        val privKey = File(dataDir, privateKeyName)
+
+        var crypto: AdbCrypto? = null
+        if (pubKey.exists() && privKey.exists()) {
+            crypto = try {
+                AdbCrypto.loadAdbKeyPair(AndroidBase64(), privKey, pubKey)
+            } catch (e: Exception) {
+                null
+            }
+        }
+
+        return crypto
+    }
+
+    private fun writeNewCryptoConfig(dataDir: File?): AdbCrypto? {
+        val pubKey = File(dataDir, publicKeyName)
+        val privKey = File(dataDir, privateKeyName)
+
+        var crypto: AdbCrypto?
+
+        try {
+            crypto = AdbCrypto.generateAdbKeyPair(AndroidBase64())
+            crypto.saveAdbKeyPair(privKey, pubKey)
+        } catch (e: Exception) {
+            crypto = null
+        }
+
+        return crypto
     }
 
     override fun onDestroy() {
@@ -177,6 +239,18 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
     class AndroidBase64 : AdbBase64 {
         override fun encodeToString(bArr: ByteArray): String {
             return Base64.encodeToString(bArr, Base64.NO_WRAP)
+        }
+    }
+
+    object ThreadUtil {
+        private val handler = Handler(Looper.getMainLooper())
+
+        fun runOnUiThread(action: () -> Unit) {
+            if (Looper.myLooper() != Looper.getMainLooper()) {
+                handler.post(action)
+            } else {
+                action.invoke()
+            }
         }
     }
 }

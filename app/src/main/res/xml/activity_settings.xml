@@ -10,6 +10,13 @@
             android:key="selected_code_key"
             android:summary="@string/button_summary"
             android:title="@string/button" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:icon="@drawable/ic_temperature_24dp"
+            android:key="switch_key"
+            android:summary="@string/temperature_summary"
+            android:title="@string/temperature" />
     </PreferenceCategory>
 
     <PreferenceCategory>

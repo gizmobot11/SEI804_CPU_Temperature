@@ -4,7 +4,9 @@
     <string name="button">Select button</string>
     <string name="button_summary">Select a button to display the toast message with the temperature.</string>
     <string name="enable_usb_debugging_first">Enable USB debugging first in the developer options</string>
-    <string name="temperature">CPU Temperature: %1$s °C</string>
+    <string name="temperature">Temperature request</string>
+    <string name="temperature_summary">Left: ThermalService\nRight: HardwareProperties</string>
+    <string name="cpu_temperature">CPU Temperature: %1$s°C</string>
 
     <string-array name="key_code_labels">
         <item>Bookmark button</item>

@@ -3,7 +3,9 @@
     <string name="button">Taste auswählen</string>
     <string name="button_summary">Wähle eine Taste, um die Toastmeldung mit der Temperatur anzuzeigen.</string>
     <string name="enable_usb_debugging_first">Aktiviere zuerst USB-Debugging in den Entwickleroptionen</string>
-    <string name="temperature">CPU Temperatur: %1$s °C</string>
+    <string name="temperature">Temperatur-Anfrage</string>
+    <string name="temperature_summary">Links: ThermalService\nRechts: HardwareProperties</string>
+    <string name="cpu_temperature">CPU Temperatur: %1$s°C</string>
 
     <string-array name="key_code_labels">
         <item>Lesezeichen-Taste</item>
