@@ -3,9 +3,12 @@
     <string name="button">Gomb kiválasztása</string>
     <string name="button_summary">Gomb kiválasztása a hőmérséklet kijelzéséhez.</string>
     <string name="enable_usb_debugging_first">Először engedélyezze az USB hibakeresést a fejlesztői beállításoknál</string>
-    <string name="temperature">Hőmérséklet megjelenítés</string>
-    <string name="temperature_summary">Bal: ThermalService\nJobb: HardwareProperties</string>
-    <string name="cpu_temperature">CPU Hőmérséklet: %1$s°C</string>
+    <string name="temperature_request">Hőmérséklet megjelenítés</string>
+    <string name="temperature_request_summary">Bal: ThermalService\nJobb: HardwareProperties</string>
+    <string name="temperature_unit">Hőmérséklet egység</string>
+    <string name="temperature_unit_summary">Bal: Celsius\nJobb: Fahrenheit</string>
+    <string name="cpu_temperature_celsius">CPU Hőmérséklet: %1$s°C</string>
+    <string name="cpu_temperature_fahrenheit">CPU Hőmérséklet: %1$s°F</string>
 
     <string-array name="key_code_labels">
         <item>Bookmark Gomb</item>

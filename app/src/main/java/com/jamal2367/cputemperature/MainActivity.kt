@@ -20,6 +20,9 @@ import com.tananaev.adblib.AdbStream
 import java.io.File
 import java.lang.ref.WeakReference
 import java.net.Socket
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 
 class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -31,7 +34,8 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
     private var myAsyncTask: MyAsyncTask? = null
     private val ipAddress = "0.0.0.0"
     private val selectedCodeKey = "selected_code_key"
-    private var switchKey= "switch_key"
+    private var requestKey= "request_key"
+    private var celFahrKey= "celsius_fahrenheit_key"
     private val publicKeyName: String = "public.key"
     private val privateKeyName: String = "private.key"
 
@@ -129,41 +133,90 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
         }
 
         try {
-            val isSwitch = sharedPreferences.getBoolean(switchKey, false)
+            val isRequest = sharedPreferences.getBoolean(requestKey, false)
+            val isCelFahr = sharedPreferences.getBoolean(celFahrKey, false)
 
             if (stream == null || connection == null) {
                 connection = AdbConnection.create(socket, crypto)
                 connection?.connect()
             }
 
-            if (!isSwitch) {
-                val thermalServiceStream = connection?.open("shell:dumpsys thermalservice | awk -F= '/mValue/{printf \"%.1f\\n\", \$2}' | sed -n '2p'")
-                val thermalServiceOutputBytes = thermalServiceStream?.read()
-                var thermalServiceMessage: String = thermalServiceOutputBytes?.decodeToString() ?: "No output available"
-
-                thermalServiceMessage = thermalServiceMessage.replace("\n", "")
-
-                runOnUiThread {
-                    Toast.makeText(this, getString(R.string.cpu_temperature, thermalServiceMessage), Toast.LENGTH_LONG).show()
+            if (isRequest) {
+                if (isCelFahr) {
+                    hardwarePropertiesFahrenheit()
+                } else {
+                    hardwarePropertiesCelsius()
                 }
             } else {
-                val hardwarePropertiesStream = connection?.open("shell:dumpsys hardware_properties | grep \"CPU temperatures\" | cut -d \"[\" -f2 | cut -d \"]\" -f1")
-                val hardwarePropertiesOutputBytes = hardwarePropertiesStream?.read()
-                var hardwarePropertiesMessage: String = hardwarePropertiesOutputBytes?.decodeToString() ?: "No output available"
-
-                val formattedTemperatures = hardwarePropertiesMessage.split(". ")
-                    .mapNotNull { it.toDoubleOrNull() }
-                    .joinToString(", ") { "%.1f".format(it).replace(",", ".") }
-
-                hardwarePropertiesMessage = formattedTemperatures.replace("\n", "")
-
-                runOnUiThread {
-                    Toast.makeText(this, getString(R.string.cpu_temperature, hardwarePropertiesMessage), Toast.LENGTH_LONG).show()
+                if (isCelFahr) {
+                    thermalServiceFahrenheit()
+                } else {
+                    thermalServiceCelsius()
                 }
             }
         } catch (e: InterruptedException) {
             e.printStackTrace()
             Thread.currentThread().interrupt()
+        }
+    }
+
+    private fun thermalServiceCelsius() {
+        val thermalServiceStream = connection?.open("shell:dumpsys thermalservice | awk -F= '/mValue/{printf \"%.1f\\n\", \$2}' | sed -n '2p'")
+        val thermalServiceOutputBytes = thermalServiceStream?.read()
+        var thermalServiceMessage: String = thermalServiceOutputBytes?.decodeToString() ?: "No output available"
+
+        thermalServiceMessage = thermalServiceMessage.replace("\n", "")
+
+        runOnUiThread {
+            Toast.makeText(this, getString(R.string.cpu_temperature_celsius, thermalServiceMessage), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun hardwarePropertiesCelsius() {
+        val hardwarePropertiesStream = connection?.open("shell:dumpsys hardware_properties | grep \"CPU temperatures\" | cut -d \"[\" -f2 | cut -d \"]\" -f1")
+        val hardwarePropertiesOutputBytes = hardwarePropertiesStream?.read()
+        var hardwarePropertiesMessage: String = hardwarePropertiesOutputBytes?.decodeToString() ?: "No output available"
+
+        val formattedTemperatures = hardwarePropertiesMessage.split(". ")
+            .mapNotNull { it.toDoubleOrNull() }
+            .joinToString(", ") { "%.1f".format(it).replace(",", ".") }
+
+        hardwarePropertiesMessage = formattedTemperatures.replace("\n", "")
+
+        runOnUiThread {
+            Toast.makeText(this, getString(R.string.cpu_temperature_celsius, hardwarePropertiesMessage), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun thermalServiceFahrenheit() {
+        val thermalServiceStream = connection?.open("shell:dumpsys thermalservice | awk -F= '/mValue/{printf \"%.1f\\n\", \$2}' | sed -n '2p'")
+        val thermalServiceOutputBytes = thermalServiceStream?.read()
+        var thermalServiceMessage: String = thermalServiceOutputBytes?.decodeToString() ?: "No output available"
+
+        thermalServiceMessage = thermalServiceMessage.replace("\n", "")
+
+        val decimalFormat = DecimalFormat("0.0", DecimalFormatSymbols(Locale.ENGLISH))
+        val celsiusTemperature = thermalServiceMessage.toDoubleOrNull() ?: 0.0
+        val fahrenheitTemperature = celsiusTemperature * 9/5 + 32
+
+        runOnUiThread {
+            Toast.makeText(this, getString(R.string.cpu_temperature_fahrenheit, decimalFormat.format(fahrenheitTemperature)), Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun hardwarePropertiesFahrenheit() {
+        val hardwarePropertiesStream = connection?.open("shell:dumpsys hardware_properties | grep \"CPU temperatures\" | cut -d \"[\" -f2 | cut -d \"]\" -f1")
+        val hardwarePropertiesOutputBytes = hardwarePropertiesStream?.read()
+        var hardwarePropertiesMessage: String = hardwarePropertiesOutputBytes?.decodeToString() ?: "No output available"
+
+        hardwarePropertiesMessage = hardwarePropertiesMessage.replace("\n", "")
+
+        val decimalFormat = DecimalFormat("0.0", DecimalFormatSymbols(Locale.ENGLISH))
+        val celsiusTemperature = hardwarePropertiesMessage.toDoubleOrNull() ?: 0.0
+        val fahrenheitTemperature = celsiusTemperature * 9/5 + 32
+
+        runOnUiThread {
+            Toast.makeText(this, getString(R.string.cpu_temperature_fahrenheit, decimalFormat.format(fahrenheitTemperature)), Toast.LENGTH_LONG).show()
         }
     }
 

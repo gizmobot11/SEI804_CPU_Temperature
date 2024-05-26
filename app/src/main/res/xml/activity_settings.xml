@@ -13,10 +13,17 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:icon="@drawable/ic_sensor_24dp"
+            android:key="request_key"
+            android:summary="@string/temperature_request_summary"
+            android:title="@string/temperature_request" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:icon="@drawable/ic_temperature_24dp"
-            android:key="switch_key"
-            android:summary="@string/temperature_summary"
-            android:title="@string/temperature" />
+            android:key="celsius_fahrenheit_key"
+            android:summary="@string/temperature_unit_summary"
+            android:title="@string/temperature_unit" />
     </PreferenceCategory>
 
     <PreferenceCategory>
