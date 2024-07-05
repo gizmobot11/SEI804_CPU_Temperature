@@ -1,0 +1,32 @@
+<resources>
+    <string name="settings">Парамерти</string>
+    <string name="button">Вибір кнопки</string>
+    <string name="button_summary">Виберіть кнопку для відображення Тост-повідомлення з температурою.</string>
+    <string name="enable_usb_debugging_first">Спершу увімкніть налагодження по USB у параментах розробника</string>
+    <string name="temperature_request">Запит температури</string>
+    <string name="temperature_request_summary">Left: ThermalService\nRight: HardwareProperties</string>
+    <string name="temperature_unit">Одиниці виміру температури</string>
+    <string name="temperature_unit_summary">Зліва: Цельсій\nСправа: Фаренгейт</string>
+    <string name="cpu_temperature_celsius">Температура процесора: %1$s°C</string>
+    <string name="cpu_temperature_fahrenheit">Температура процесора: %1$s°F</string>
+
+    <string-array name="key_code_labels">
+        <item>Кнопка Закладки</item>
+        <item>Кнопка Телегід</item>
+        <item>Червона кнопка</item>
+        <item>Зелена кнопка</item>
+        <item>Жовта кнопка</item>
+        <item>Синя кнопка</item>
+        <item>Кнопка 0</item>
+        <item>Кнопка 1</item>
+        <item>Кнопка 2</item>
+        <item>Кнопка 3</item>
+        <item>Кнопка 4</item>
+        <item>Кнопка 5</item>
+        <item>Кнопка 6</item>
+        <item>Кнопка 7</item>
+        <item>Кнопка 8</item>
+        <item>Кнопка 9</item>
+        <item>Немає</item>
+    </string-array>
+</resources>
