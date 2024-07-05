@@ -28,6 +28,7 @@
         <item>Button 7</item>
         <item>Button 8</item>
         <item>Button 9</item>
+        <item>None</item>
     </string-array>
 
     <string-array name="key_codes">
@@ -48,5 +49,6 @@
         <item>14</item>
         <item>15</item>
         <item>16</item>
+        <item>17</item>
     </string-array>
 </resources>
