@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name" translatable="false">SEI804 CPU Temperature</string>
     <string name="settings">Settings</string>
+    <string name="about">About</string>
     <string name="button">Select button</string>
     <string name="button_summary">Select a button to display the toast message with the temperature.</string>
     <string name="enable_usb_debugging_first">Enable USB debugging first in the developer options</string>
