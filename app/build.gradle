@@ -13,7 +13,7 @@ android {
         targetSdk 34
         versionCode 40
         versionName '4.0'
-        resConfigs 'en', 'de', 'hu', 'uk'
+        resConfigs 'en', 'de', 'hu', 'ru', 'uk'
         setProperty('archivesBaseName', 'SEI804_CPU_Temperature_' + versionName)
     }
 

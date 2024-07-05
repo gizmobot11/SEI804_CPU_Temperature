@@ -1,0 +1,33 @@
+<resources>
+    <string name="settings">Настройки</string>
+    <string name="about">О программе</string>
+    <string name="button">Выбор кнопки</string>
+    <string name="button_summary">Выберите кнопку для вызова сообщения о температуре.</string>
+    <string name="enable_usb_debugging_first">Сначала включите отладку по USB в настройках разработчика.</string>
+    <string name="temperature_request">Запрос температуры</string>
+    <string name="temperature_request_summary">Слева: Значение температуры\nСправа: Свойства оборудования</string>
+    <string name="temperature_unit">Единица измерения температуры</string>
+    <string name="temperature_unit_summary">Слева: градусы Цельсия\nСправа: градусы Фаренгейта</string>
+    <string name="cpu_temperature_celsius">Температура процессора: %1$sВ°C</string>
+    <string name="cpu_temperature_fahrenheit">Температура процессора: %1$sВ°F</string>
+
+    <string-array name="key_code_labels">
+        <item>Избранное</item>
+        <item>Телегид</item>
+        <item>Красная кнопка</item>
+        <item>Зеленая кнопка</item>
+        <item>Желтая кнопка</item>
+        <item>Синяя кнопка</item>
+        <item>Кнопка 0</item>
+        <item>Кнопка 1</item>
+        <item>Кнопка 2</item>
+        <item>Кнопка 3</item>
+        <item>Кнопка 4</item>
+        <item>Кнопка 5</item>
+        <item>Кнопка 6</item>
+        <item>Кнопка 7</item>
+        <item>Кнопка 8</item>
+        <item>Кнопка 9</item>
+        <item>Без кнопки</item>
+    </string-array>
+</resources>
