@@ -90,7 +90,7 @@ class MainActivity : AccessibilityService(), SharedPreferences.OnSharedPreferenc
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
 
         standardKeyCode = when (index) {
-            0 -> KeyEvent.KEYCODE_BOOKMARK
+            0 -> KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
             1 -> KeyEvent.KEYCODE_GUIDE
             2 -> KeyEvent.KEYCODE_PROG_RED
             3 -> KeyEvent.KEYCODE_PROG_GREEN
